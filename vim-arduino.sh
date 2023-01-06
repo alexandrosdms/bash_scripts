@@ -10,23 +10,32 @@ sudo apt-get install arduino-mk
 ## create filesystem
 # I store all my arduino sketches into a github repository
 # I store all my cloned repos into a git folder in the home directory
-GIT_DIR="~/git"
+GIT_DIR="/home/alexandros/git"
 if [ -d "$GIT_DIR" ]; then
-    echo "Git directory does not exist. Creating one ..."
-    mkdir ~/git
+    echo "Git directory exists. 
+        Proccesing to seup arduino sketches directory ..."
+else
+    echo "Git Directory does not exist. Creating one ..."
+    mkdir ${GIT_DIR}    
 fi
-cd ~/git
+
 # This repo contains a child Makefile which references the original
 # used to compile C++ sketches which resides in $ARDUINO_HOME
 # cat ~/git/arduino_sketches/Makefile for details
-git clone https://github.com/alexandrosdms/arduino_sketches.git
+
+ARDUINO_SKETCHES_DIR="${GIT_DIR}/arduino_sketches"
+if  [ -d "$ARDUINO_SKETCHES_DIR" ]; then
+    cd ${GIT_DIR}
+    git clone https://github.com/alexandrosdms/arduino_sketches.git
+fi
 
 ## Test arduino connection
-cd ~/git/arduino_sketches/exploring_arduino
+cd ${ARDUINO_SKETCHES_DIR}
+pwd
 make
-BUILD_DIR="~/git/arduino_sketches/exploring_arduino/build-uno"
+BUILD_DIR="${ARDUINO_SKETCHES_DIR}/build-uno"
 if [ -d "$BUILD_DIR" ]; then
-    echo "Arduino UNO is setted up correctly!"
+    echo "Arduino UNO setted up correctly!"
     echo "Uploading onboard blinking LED sketch ..."
     make upload clean # deletes $BUILD_DIR
 fi
